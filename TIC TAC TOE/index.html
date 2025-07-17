@@ -1,0 +1,169 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TIC TAC TOE</title>
+    <style>
+      * {
+        font-weight: 900;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 30px;
+        user-select: none;
+      }
+      /* Center everything in the body */
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Full height viewport */
+        margin: 0; /* Remove default body margin */
+        background-color: 03A6A1; /* Optional: Light background */
+      }
+
+      /* Heading or title */
+      #name {
+        font-weight: 900;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 30px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Board container */
+      .board {
+        height: 300px;
+        width: 300px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 5px; /* Space between boxes */
+      }
+
+      /* Individual box */
+      .box {
+        height: 90px;
+        width: 90px;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        background-color: FFE3BB;
+        font-size: 30px;
+        font-weight: bold;
+        color: FF4F0F;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .box:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      .but {
+        height: 50px;
+        width: 300px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        top: 20px;
+      }
+      .reset {
+        height: 50px;
+        width: 150px;
+        border-radius: 10px;
+        border: none;
+        margin: 10px;
+        font-weight: 900;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        background-color: black;
+        color: FFE3BB;
+        transition: 0.2s;
+      }
+      .reset:hover {
+        transform: scale(1.05);
+      }
+      .win {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <p id="name">Tic Tac Toe</p>
+      <p class="win"></p>
+      <div class="board">
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+      </div>
+      <div class="but"><button class="reset">RESET</button></div>
+    </div>
+    <script>
+      const boxes = document.querySelectorAll(".box");
+      const winText = document.querySelector(".win");
+      let currentPlayer = "X";
+      let gameActive = true;
+
+      const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8], // Rows
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8], // Columns
+        [0, 4, 8],
+        [2, 4, 6], // Diagonals
+      ];
+
+      function checkWin() {
+        for (const pattern of winPatterns) {
+          const [a, b, c] = pattern;
+          if (
+            boxes[a].textContent &&
+            boxes[a].textContent === boxes[b].textContent &&
+            boxes[b].textContent === boxes[c].textContent
+          ) {
+            winText.textContent = `${boxes[a].textContent} Wins!`;
+            gameActive = false;
+            boxes.forEach((box) => (box.disabled = true));
+            return;
+          }
+        }
+
+        if ([...boxes].every((box) => box.textContent)) {
+          winText.textContent = "It's a Draw!";
+          gameActive = false;
+        }
+      }
+
+      boxes.forEach((box) => {
+        box.addEventListener("click", () => {
+          if (box.textContent === "" && gameActive) {
+            box.textContent = currentPlayer;
+            checkWin();
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+          }
+        });
+      });
+
+      // ✅ RESET without reload
+      document.querySelector(".reset").addEventListener("click", () => {
+        boxes.forEach((box) => {
+          box.textContent = "";
+          box.disabled = false;
+        });
+        winText.textContent = ""; // 🔥 Winner message clear
+        currentPlayer = "X";
+        gameActive = true;
+      });
+    </script>
+  </body>
+</html>
